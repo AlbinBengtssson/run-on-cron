@@ -13,5 +13,5 @@ python run_on_cron.py <command to run on loop> <cron string>
 
 For example:
 ```
-python run_on_cron.py "python test_script.py" "\* \* \* \* \*"
+python run_on_cron.py "python test_script.py" "* * * * *"
 ```
