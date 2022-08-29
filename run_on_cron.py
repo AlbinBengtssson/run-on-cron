@@ -1,7 +1,11 @@
+from ast import Raise
 from datetime import datetime
 from time import sleep
 from subprocess import Popen
 from sys import argv
+
+# TODO: Add check for month and day of the week. Now it can only handle input in the form of integers,
+#       not 'JAN' or 'MON', etc.
 
 '''
 Cron Cheat Sheet:
@@ -35,7 +39,13 @@ def cron_time_match(cron_val, time_val):
 
     match = False
 
-    if cron_val == '*' or cron_val == time_val:
+    if ((',' in cron_val and '/' in cron_val)
+        or (',' in cron_val and '-' in cron_val)
+            or ('/' in cron_val and '-' in cron_val)):
+        raise ValueError(
+            "Invalid cron input. Note that the program cannot handle combined inputs such as '1-5/3,50'")
+
+    elif cron_val == '*' or cron_val == time_val:
         match = True
 
     elif '-' in cron_val:
@@ -58,10 +68,6 @@ def cron_time_match(cron_val, time_val):
         if int(time_val) % int(cron_step_vals[1]) == 0:
             match = True
 
-    else:
-        raise ValueError(
-            "Invalid cron input. Note that the program cannot handle combined inputs such as '1-5/3,50'")
-
     return match
 
 
@@ -74,17 +80,27 @@ def weekday_to_cron(datetime_weekday):
         return datetime_weekday + 1
 
 
-def check_time_to_execute(cron):
+def check_cron_input(cron):
+    # Makes sure that the cron input is of the right length.
+    # TODO: Make more robust. Check if the values are valid.
+
+    try:
+        assert len(cron.split()) == 5
+    except AssertionError as e:
+        raise AssertionError(
+            "Invalid cron input, must be five values with space inbetween. For example: '* * * * *'.")
+
+
+def check_time_to_execute(cron, time):
     # Checks whether it is time to execute the program according to the cron specification.
 
-    current_time = datetime.now()
+    if (cron_time_match(cron[3], str(time.month))
+            and cron_time_match(cron[4], str(weekday_to_cron(time.weekday())))
+            and cron_time_match(cron[2], str(time.day))
+            and cron_time_match(cron[1], str(time.hour))
+            and cron_time_match(cron[0], str(time.minute))
+            and time.second == 0):
 
-    if (cron_time_match(cron[3], str(current_time.month))
-            and cron_time_match(cron[4], str(weekday_to_cron(current_time.weekday())))
-            and cron_time_match(cron[2], str(current_time.day))
-            and cron_time_match(cron[1], str(current_time.hour))
-            and cron_time_match(cron[0], str(current_time.minute))
-            and current_time.second == 0):
         return True
 
     return False
@@ -94,13 +110,14 @@ def check_time_to_execute(cron):
 #       command:    Command that shoudl be ran, for example 'python script.py' or 'bash script.sh'
 #       cron:       Cron expression in the form of a string, for example '5 4 * * *'.
 if __name__ == "__main__":
+    check_cron_input(argv[2])
     command = argv[1]
     cron = argv[2].split()
 
     while True:
-        if check_time_to_execute(cron):
+        if check_time_to_execute(cron, datetime.now()):
             print('Executing at: ', datetime.now())
-            Popen(command, shell=True, stdout=False)
+            Popen(command, shell=True)
             sleep(50)
 
         while datetime.now().second != 0:
