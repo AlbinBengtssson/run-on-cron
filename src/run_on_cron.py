@@ -1,4 +1,3 @@
-from ast import Raise
 from datetime import datetime
 from time import sleep
 from subprocess import Popen
