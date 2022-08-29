@@ -3,8 +3,6 @@ from time import sleep
 from subprocess import Popen
 from sys import argv
 
-# TODO: Add functionality for combined operators such as '0,1/5 * * * *' as well as functionality for '/' (step values).
-
 '''
 Cron Cheat Sheet:
 
@@ -33,25 +31,36 @@ Example:
 def cron_time_match(cron_val, time_val):
     # Checks whether the time_val is within the specification of the cron value.
     # NOTE: This only checks a single value, not a complete cron string.
+    # TODO: Handle combined inputs such as '1-5/3,5'.
 
     match = False
 
     if cron_val == '*' or cron_val == time_val:
         match = True
+
     elif '-' in cron_val:
         cron_val_min = int(cron_val.split('-')[0])
         cron_val_max = int(cron_val.split('-')[1])
         if (int(time_val) <= cron_val_max and int(time_val) >= cron_val_min):
             match = True
+
     elif ',' in cron_val:
         values = cron_val.split(',')
         if time_val in values:
             match = True
 
     elif '/' in cron_val:
-        # Dividable (%), (x/y) -> every y minute from x through max
+        cron_step_vals = cron_val.split('/')
 
-        raise ValueError("Not yet able to handle step values '/'")
+        if cron_step_vals[0] != '*':
+            raise ValueError(
+                "Non standard cron input. Step values must be specified as '*/x' where x is a value.")
+        if int(time_val) % int(cron_step_vals[1]) == 0:
+            match = True
+
+    else:
+        raise ValueError(
+            "Invalid cron input. Note that the program cannot handle combined inputs such as '1-5/3,50'")
 
     return match
 
@@ -90,6 +99,7 @@ if __name__ == "__main__":
 
     while True:
         if check_time_to_execute(cron):
+            print('Executing at: ', datetime.now())
             Popen(command, shell=True, stdout=False)
             sleep(50)
 
