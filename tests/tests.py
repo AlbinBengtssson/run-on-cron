@@ -1,6 +1,6 @@
 import datetime
 from pytest import raises
-from run_on_cron import weekday_to_cron, check_time_to_execute, cron_time_match, check_cron_input
+from src.run_on_cron import weekday_to_cron, check_time_to_execute, cron_time_match, check_cron_input
 
 
 def test_weekday_to_cron():
