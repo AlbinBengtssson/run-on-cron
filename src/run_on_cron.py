@@ -109,13 +109,17 @@ def check_time_to_execute(cron, time):
 #       command:    Command that shoudl be ran, for example 'python script.py' or 'bash script.sh'
 #       cron:       Cron expression in the form of a string, for example '5 4 * * *'.
 if __name__ == "__main__":
-    check_cron_input(argv[2])
     command = argv[1]
-    cron = argv[2].split()
+    cron = argv[2]
+    check_cron_input(cron)
+
+    print('run_on_cron launched at:', datetime.now(),
+          '\nwith command:', command, '\nand cron expression:', cron)
 
     while True:
-        if check_time_to_execute(cron, datetime.now()):
-            print('Executing at: ', datetime.now())
+
+        if check_time_to_execute(cron.split(), datetime.now()):
+            # print('Executing at: ', datetime.now())
             Popen(command, shell=True)
             sleep(50)
 

@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  run-on-cron:
+    build:
+      context: .
+      target: run-on-cron
+    container_name: run-on-cron
+    environment:
+      TZ: Europe/Stockholm
