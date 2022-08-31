@@ -1,6 +1,10 @@
-FROM python:3.9 as python_base
+FROM ubuntu:20.04 AS base_image
 
 WORKDIR /code
+
+RUN apt-get update && apt-get install -y python3-pip
+
+RUN pip install --upgrade pip
 
 COPY requirements.txt ./
 
@@ -9,17 +13,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./src /code/src
 
 # Run tests
-FROM python_base AS test
+FROM base_image AS test
 
 COPY ./tests /code/tests
 
 CMD ["pytest", "./tests/tests.py"]
 
-# Run the desired program
-FROM python_base AS run-on-cron
+FROM base_image AS run-on-cron
 
-#   <relative path to file to run>   
-COPY example_py_script.py ./
+COPY docker-entrypoint.sh ./
 
-#                                          "<command>  <filename>""       "<cron exp>"
-CMD ["python", "-u", "src/run_on_cron.py", "python example_py_script.py", "* * * * *"]
+COPY ./scripts /code/scripts
+# COPY example_bash_script.sh ./
+
+ENTRYPOINT ["/code/docker-entrypoint.sh"]
