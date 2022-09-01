@@ -3,7 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - master
+      - feature/github_CI
   pull_request:
     branches:
       - master
