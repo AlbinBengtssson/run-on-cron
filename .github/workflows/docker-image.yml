@@ -1,0 +1,38 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    # strategy:
+    #   matrix:
+    #     python-version:
+    #       - "3.9"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Test
+        run: pytest tests/tests.py
+
+      - name: Build image
+        env:
+          USERNAME: AlbinBengtssson
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY: docker.pkg.github.com
+          REPOSITORY: AlbinBengtssson/run-on-cron
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
+          docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
+          docker push $REGISTRY/$REPOSITORY --all-tags
+          echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
