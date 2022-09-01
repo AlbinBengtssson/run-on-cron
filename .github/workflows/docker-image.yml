@@ -27,6 +27,7 @@ jobs:
       - name: Build image
         env:
           USERNAME: AlbinBengtssson
+          ARGS: "-av"
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REGISTRY: docker.pkg.github.com
           REPOSITORY: AlbinBengtssson/run-on-cron
