@@ -1,7 +1,0 @@
-version: "3.9"
-services:
-  run-on-cron-test:
-    build:
-      context: .
-      target: test
-    container_name: cron-test-python
