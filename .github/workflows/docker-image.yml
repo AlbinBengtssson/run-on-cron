@@ -12,10 +12,6 @@ jobs:
   build:
     name: Deploy
     runs-on: ubuntu-20.04
-    # strategy:
-    #   matrix:
-    #     python-version:
-    #       - "3.9"
 
     steps:
       - name: Checkout
@@ -44,7 +40,7 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
         run: |
           docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
-          docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
+          docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REPOSITORY:latest" .
           docker push $REGISTRY/$REPOSITORY --all-tags
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
