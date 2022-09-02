@@ -42,6 +42,7 @@ jobs:
         run: |
           docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
           docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
-          docker push $REGISTRY/$REPOSITORY/$IMAGE_NAME --all-tags
           docker ps -a
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+
+# docker push $REGISTRY/$REPOSITORY/$IMAGE_NAME --all-tags
