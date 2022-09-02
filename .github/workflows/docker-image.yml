@@ -21,13 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Test
-        run: pytest tests/tests.py
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+        # run: pytest tests/tests.py
 
       - name: Build image
         env:
           USERNAME: AlbinBengtssson
-          ARGS: "-av"
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REGISTRY: docker.pkg.github.com
           REPOSITORY: AlbinBengtssson/run-on-cron
@@ -37,3 +40,7 @@ jobs:
           docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
           docker push $REGISTRY/$REPOSITORY --all-tags
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+
+# https://github.com/AlbinBengtssson/run-on-cron/new/master?filename=.github%2Fworkflows%2Fpython-package.yml&workflow_template=python-package
+
+# https://github.com/AlbinBengtssson/run-on-cron/new/master?filename=.github%2Fworkflows%2Fpython-app.yml&workflow_template=python-app
