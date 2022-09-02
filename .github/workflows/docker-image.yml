@@ -43,5 +43,5 @@ jobs:
           docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
           docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
           docker image list
-          docker image push $REGISTRY/$REPOSITORY/$IMAGE_NAME --all-tags
+          docker image push $REGISTRY/$REPOSITORY/$IMAGE_TAG --all-tags
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
