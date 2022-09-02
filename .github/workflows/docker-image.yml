@@ -38,10 +38,11 @@ jobs:
           REGISTRY: docker.pkg.github.com
           REPOSITORY: albinbengtssson/run-on-cron
           COMMIT_SHA: ${{ github.sha }}
+          IMAGE_NAME: run-on-cron
         run: |
           docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
           docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
-          docker push $REGISTRY/$REPOSITORY --all-tags
+          docker push $REGISTRY/$REPOSITORY/$IMAGE_NAME --all-tags
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
 # https://github.com/AlbinBengtssson/run-on-cron/new/master?filename=.github%2Fworkflows%2Fpython-package.yml&workflow_template=python-package
