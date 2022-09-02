@@ -13,7 +13,7 @@ else
     echo "Specify command and cron interval using '--command=' and '--cron='"
     echo "For example:"
     echo docker run --rm -v '$(pwd)'/run-on-cron run-on-cron_run-on-cron --command="'"python /code/scripts/example_py_script.py"'" --cron="'""* * * * *""'"
-    exit 1
+    # exit 1
 fi
 
 # if [[ "$*" == *--command* ]] && [[ "$*" == *--cron* ]]; then
