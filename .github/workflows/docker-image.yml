@@ -31,17 +31,25 @@ jobs:
         run: |
           pytest tests/tests.py
 
-      - name: Build image
+      - name: Docker login
+        uses: docker/build-and-push-action@v3
         env:
           USERNAME: AlbinBengtssson
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REGISTRY: docker.pkg.github.com
           REPOSITORY: albinbengtssson/run-on-cron
           COMMIT_SHA: ${{ github.sha }}
-          IMAGE_NAME: run-on-cron
-        run: |
+          # IMAGE_NAME: run-on-cron
+        run:
           docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
-          docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
-          docker image list
-          docker image push $REGISTRY/$REPOSITORY --all-tags
-          echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          # docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
+          # docker image list
+          # docker image push $REGISTRY/$REPOSITORY --all-tags
+          # echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+
+      - name: Build and push image
+        uses: docker/build-and-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: "$REGISTRY/$REPOSITORY:latest"
