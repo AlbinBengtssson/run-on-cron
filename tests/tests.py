@@ -7,7 +7,7 @@ def test_weekday_to_cron():
     # Sunday
     dt_sun = datetime.datetime(2022, 8, 28)
     assert dt_sun.weekday() == 6
-    assert weekday_to_cron(dt_sun.weekday()) == 1  # 0
+    assert weekday_to_cron(dt_sun.weekday()) == 0
 
     # Monday
     dt_mon = datetime.datetime(2022, 8, 29)
