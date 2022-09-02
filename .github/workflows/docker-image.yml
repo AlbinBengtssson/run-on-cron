@@ -36,13 +36,13 @@ jobs:
           USERNAME: AlbinBengtssson
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REGISTRY: docker.pkg.github.com
-          REPOSITORY: albinbengtssson/run-on-cron
+          REPOSITORY: albinbengtssson/run-on-cron/run-on-cron
           COMMIT_SHA: ${{ github.sha }}
         run: |
           docker login https://docker.pkg.github.com -u $USERNAME -p $TOKEN
           docker build -t "$REGISTRY/$REPOSITORY:$COMMIT_SHA" -t "$REGISTRY/$REPOSITORY:latest" .
           docker image list
-          docker image push $REGISTRY/$REPOSITORY/run-on-cron --all-tags
+          docker image push $REGISTRY/$REPOSITORY --all-tags
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
-#docker image push "$REGISTRY/$REPOSITORY --all-tags
+#docker image push $REGISTRY/$REPOSITORY/<image_name>:tag --all-tags
