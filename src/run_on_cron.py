@@ -133,7 +133,7 @@ def filter_input(args: List[str]) -> Tuple[str, str]:
 
 
 # Input:
-#       command:    Command that shoudl be ran, for example 'python script.py' or 'bash script.sh' # noqa: E501
+#       command:    Command that should be executed, for example 'python script.py' or 'bash script.sh' # noqa: E501
 #       cron:       Cron expression in the form of a string, for example '5 4 * * *'.
 if __name__ == "__main__":
     command, cron = filter_input(argv)
